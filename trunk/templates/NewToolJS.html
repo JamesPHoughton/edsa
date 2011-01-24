@@ -1,0 +1,553 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ <html xmlns="http://www.w3.org/1999/xhtml">
+ 
+ 	<head>
+ 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+ 		<title>Edit Tool</title>
+ 		<link href="/media/styles/create.css" rel="stylesheet" type="text/css" />
+         	<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dijit/themes/tundra/tundra.css"/>
+		<script src='/media/scripts/dojo-1.4.3/dojo/dojo.js' type="text/javascript" djConfig="parseOnLoad: true">
+        	</script>
+        	<style type="text/css">
+            		body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+            		@import "../../_static/dojo/dojo/dojox/form/resources/DropDownSelect.css";
+        	</style>
+	</head>
+	<body class="tundra">
+		<div dojoType="dijit._Widget" style="display:none;">
+			<script type="dojo/method" event="postCreate">
+                // create dijit.form.Select as a simple wrapper to dojox.form.DropDownSelect for Dojo < 1.4
+        			if (!dijit.form.Select) {
+        				dojo.declare("dijit.form.Select", dojox.form.DropDownSelect, {});
+                			}
+        		</script>
+		</div>
+	<script type="text/javascript">
+        dojo.require("dijit.form.Button");
+        dojo.require("dijit.form.Select");
+	dojo.require("dijit.form.CheckBox");
+        dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dojox.form.FileInput");
+        dojo.require("dijit.form.ValidationTextBox");
+        dojo.require("dojox.html._base");
+	dojo.require("dojox.layout.ContentPane");
+	dojo.require('dojo.parser');
+        dojo.require("dijit.layout.TabContainer");
+	dojo.require("dijit.form.Textarea");
+
+function Log(tool){
+	var targetNode=dojo.byId("footer");
+	var xhrArgs={
+		url:"/log/",
+		handleAs:"text",
+		content:{
+			"Tools":tool
+			},
+		
+		load:function(data){
+			dijit.byId('footer').destroyDescendants();
+			targetNode.innerHTML=data;
+			dojo.parser.parse(dojo.byId('footer'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	}
+//////save button in top pane
+function ToolSave(){
+	dijit.byId("SaveTool").attr('disabled',!check_Tool_validation());
+	}
+function check_Tool_validation() {
+	if (! dijit.byId('id_Tool Name').validate()){
+		return false;
+		};
+	if (! dijit.byId('id_Version').validate()){
+		return false;
+		};
+	return true;
+	}
+
+//////All the functions for the output pane
+function NewVarOut(){
+	var parent=dijit.byId('OutputTab');
+	var created=new dijit.layout.ContentPane({
+		title: 'New Variable',
+		content: 'Create New Variable',
+		id:'varOut',
+		closable:"true"
+		});
+	parent.addChild(created);
+	var targetNode=dijit.byId('varOut');
+	xhrArgs={
+		url:'/CreateVariableOut/',
+		handleAs:'json',
+		content:{
+			},
+		load:function(data){
+			//dijit.byId('varIn').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('rightcol'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('OutputTab').selectChild(dijit.byId('varOut') ); 
+	}
+function NewUnitOut(){
+	var parent=dijit.byId('OutputTab');
+	var created=new dijit.layout.ContentPane({
+		title: 'New Unit',
+		content: 'Create New Unit',
+		id:'unitOut',
+		closable:"true"
+		});
+	parent.addChild(created);
+	var targetNode=dijit.byId('unitOut');
+	xhrArgs={
+		url:'/CreateUnitOut/',
+		handleAs:'json',
+		content:{
+			},
+		load:function(data){
+			//dijit.byId('varIn').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('rightcol'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('OutputTab').selectChild(dijit.byId('unitOut') ); 	
+	}
+function OutputSave(){
+	dijit.byId("SaveOutputs").attr('disabled',false);
+	}
+function SaveOutputs(){
+	var targetNode=dijit.byId('OutputsForm');
+	var Outputs=dijit.byId('OutputsForm').getChildren();
+	var idx = Outputs.indexOf('SaveOutputs');
+	Outputs.splice(idx, 1);
+	var idx = Outputs.indexOf('NewVarOut');
+	Outputs.splice(idx, 1);
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+
+	for (it in Outputs){
+		if (Outputs[it].type=='text'){
+			dict[Outputs[it].id]=dijit.byId(Outputs[it].id).value
+			}
+		else {
+			dict[Outputs[it].id]=dijit.byId(Outputs[it].id).checked
+			}
+		};
+	xhrArgs={
+		url:'/Create/Outputs/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('OutputsForm').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('rightcol'));
+			dojo.connect(dijit.byId('NewVarOut'), 'onClick', function(){
+				NewVarOut()
+				});
+			dojo.connect(dijit.byId('SaveOutputs'), 'onClick', function(){
+				SaveOutputs()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('OutputTab').selectChild(dijit.byId('OutputsForm') ); 	
+	}
+
+function VarOutSave(){
+	dijit.byId("SaveVarOut").attr('disabled',!check_VarOut_validation());
+	}
+function check_VarOut_validation() {
+	if (! dijit.byId('id_label_').validate()){
+		return false;
+		};
+	if (dijit.byId('id_description_').value==''){
+		return false;
+		};
+	if (dijit.byId('id_units_').value==''){
+		return false;
+		};
+	if (dijit.byId('id_Variable_Type_').value==''){
+		return false;
+		};
+	return true;
+	}
+function SaveVarOut(){
+	var Child=dijit.byId('varOut');
+	var targetNode=dijit.byId('OutputsForm')
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+	dict['label']=dijit.byId('id_label_').value;
+	dict['description']=dijit.byId('id_description_').value;
+	dict['units']=dijit.byId('id_units_').value;
+	dict['Variable_Type']=dijit.byId('id_Variable_Type_').value;
+	xhrArgs={
+		url:'/Create/Outputs/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('OutputTab').removeChild(Child);
+			Child.destroyRecursive();
+			targetNode.destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('rightcol'));
+			dojo.connect(dijit.byId('NewVarOut'), 'onClick', function(){
+				NewVarOut()
+				});
+			dojo.connect(dijit.byId('SaveOutputs'), 'onClick', function(){
+				SaveOutputs()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('OutputTab').selectChild(dijit.byId('OutputsForm') ); 	
+	}
+function UnitOutSave(){
+	dijit.byId("SaveUnitOut").attr('disabled',!check_UnitOut_validation());
+	}
+function check_UnitOut_validation() {
+	if (! dijit.byId('id_Symbol_').validate()){
+		return false;
+		};
+	if (! dijit.byId('id_Name_').validate()){
+		return false;
+		};
+	if (dijit.byId('id_Quantity_Expressed_').value==''){
+		return false;
+		};
+	if (dijit.byId('id_Unit_System_').value==''){
+		return false;
+		};
+	return true;
+	}
+function SaveUnitOut(){
+	var Child=dijit.byId('unitOut');
+	var targetNode=dijit.byId('varOut')
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+	dict['Symbol']=dijit.byId('id_Symbol_').value;
+	dict['Name']=dijit.byId('id_Name_').value;
+	dict['Quantity_Expressed']=dijit.byId('id_Quantity_Expressed_').value;
+	dict['Unit_System']=dijit.byId('id_Unit_System_').value;
+	xhrArgs={
+		url:'/CreateVariableOut/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('OutputTab').removeChild(Child);
+			Child.destroyRecursive();
+			targetNode.destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('rightcol'));
+			dojo.connect(dijit.byId('NewUnitOut'), 'onClick', function(){
+				NewUnitOut()
+				});
+			dojo.connect(dijit.byId('SaveVarOut'), 'onClick', function(){
+				SaveVarOut()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('OutputTab').selectChild(dijit.byId('varOut') ); 	
+	}
+
+//////all the functions for the Input Pane
+function NewVarIn(){
+	var parent=dijit.byId('InputTab');
+	var created=new dijit.layout.ContentPane({
+		title: 'New Variable',
+		content: 'Create New Variable',
+		id:'varIn',
+		closable:"true"
+		});
+	parent.addChild(created);
+	var targetNode=dijit.byId('varIn');
+	xhrArgs={
+		url:'/CreateVariable/',
+		handleAs:'json',
+		content:{
+			},
+		load:function(data){
+			//dijit.byId('varIn').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('leftcol'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('InputTab').selectChild(dijit.byId('varIn') ); 
+	}
+function NewUnitIn(){
+	var parent=dijit.byId('InputTab');
+	var created=new dijit.layout.ContentPane({
+		title: 'New Unit',
+		content: 'Create New Unit',
+		id:'unitIn',
+		closable:"true"
+		});
+	parent.addChild(created);
+	var targetNode=dijit.byId('unitIn');
+	xhrArgs={
+		url:'/CreateUnit/',
+		handleAs:'json',
+		content:{
+			},
+		load:function(data){
+			//dijit.byId('varIn').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('leftcol'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('InputTab').selectChild(dijit.byId('unitIn') ); 	
+	}
+function InputSave(){
+	dijit.byId("SaveInputs").attr('disabled',false);
+	}
+function SaveInputs(){
+	var targetNode=dijit.byId('InputsForm');
+	var Inputs=dijit.byId('InputsForm').getChildren();
+	var idx = Inputs.indexOf('SaveInputs');
+	Inputs.splice(idx, 1);
+	var idx = Inputs.indexOf('NewVarIn');
+	Inputs.splice(idx, 1);
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+
+	for (it in Inputs){
+		if (Inputs[it].type=='text'){
+			dict[Inputs[it].id]=dijit.byId(Inputs[it].id).value
+			}
+		else {
+			dict[Inputs[it].id]=dijit.byId(Inputs[it].id).checked
+			}
+		};
+	xhrArgs={
+		url:'/Create/Inputs/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('InputsForm').destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('leftcol'));
+			dojo.connect(dijit.byId('NewVarIn'), 'onClick', function(){
+				NewVarIn()
+				});
+			dojo.connect(dijit.byId('SaveInputs'), 'onClick', function(){
+				SaveInputs()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('InputTab').selectChild(dijit.byId('InputsForm') ); 	
+	}
+function VarInSave(){
+	dijit.byId("SaveVarIn").attr('disabled',!check_VarIn_validation());
+	}
+function check_VarIn_validation() {
+	if (! dijit.byId('id_label').validate()){
+		return false;
+		};
+	if (dijit.byId('id_description').value==''){
+		return false;
+		};
+	if (dijit.byId('id_units').value==''){
+		return false;
+		};
+	if (dijit.byId('id_Variable_Type').value==''){
+		return false;
+		};
+	return true;
+	}
+function SaveVarIn(){
+	var Child=dijit.byId('varIn');
+	var targetNode=dijit.byId('InputsForm')
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+	dict['label']=dijit.byId('id_label').value;
+	dict['description']=dijit.byId('id_description').value;
+	dict['units']=dijit.byId('id_units').value;
+	dict['Variable_Type']=dijit.byId('id_Variable_Type').value;
+	xhrArgs={
+		url:'/Create/Inputs/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('InputTab').removeChild(Child);
+			Child.destroyRecursive();
+			targetNode.destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('leftcol'));
+			dojo.connect(dijit.byId('NewVarIn'), 'onClick', function(){
+				NewVarIn()
+				});
+			dojo.connect(dijit.byId('SaveInputs'), 'onClick', function(){
+				SaveInputs()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('InputTab').selectChild(dijit.byId('InputsForm') ); 	
+	}
+function UnitInSave(){
+	dijit.byId("SaveUnitIn").attr('disabled',!check_UnitIn_validation());
+	}
+function check_UnitIn_validation() {
+	if (! dijit.byId('id_Symbol').validate()){
+		return false;
+		};
+	if (! dijit.byId('id_Name').validate()){
+		return false;
+		};
+	if (dijit.byId('id_Quantity_Expressed').value==''){
+		return false;
+		};
+	if (dijit.byId('id_Unit_System').value==''){
+		return false;
+		};
+	return true;
+	}
+function SaveUnitIn(){
+	var Child=dijit.byId('unitIn');
+	var targetNode=dijit.byId('varIn')
+	var dict=new Object();
+	dict['Tools']=dijit.byId('Tools').value;
+	dict['Symbol']=dijit.byId('id_Symbol').value;
+	dict['Name']=dijit.byId('id_Name').value;
+	dict['Quantity_Expressed']=dijit.byId('id_Quantity_Expressed').value;
+	dict['Unit_System']=dijit.byId('id_Unit_System').value;
+	xhrArgs={
+		url:'/CreateVariable/',
+		handleAs:'json',
+		content:dict,
+		load:function(data){
+			dijit.byId('InputTab').removeChild(Child);
+			Child.destroyRecursive();
+			targetNode.destroyDescendants();
+			targetNode.attr('content',data.html);
+			dojo.parser.parse(dojo.byId('leftcol'));
+			dojo.connect(dijit.byId('NewUnitIn'), 'onClick', function(){
+				NewUnitIn()
+				});
+			dojo.connect(dijit.byId('SaveVarIn'), 'onClick', function(){
+				SaveVarIn()
+				});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	dijit.byId('InputTab').selectChild(dijit.byId('varIn') ); 	
+	}
+//////general on load procedure. 
+dojo.addOnLoad(function(){
+	var tool=dijit.byId('Tools')
+	Log(tool.value)
+	dijit.byId('NewVarIn').attr('disabled', false);
+	dojo.connect(dijit.byId('NewVarIn'), 'onClick', function(){
+		NewVarIn()
+		});
+	dojo.connect(dijit.byId('NewVarOut'), 'onClick', function(){
+		NewVarOut()
+		});
+	dojo.connect(dijit.byId('SaveInputs'), 'onClick', function(){
+		SaveInputs()
+		});
+	dojo.connect(dijit.byId('SaveOutputs'), 'onClick', function(){
+		SaveOutputs()
+		});
+	});
+
+
+
+
+
+
+	</script>
+
+
+
+
+
+
+		<div id="Header" dojoType="dojox.layout.ContentPane" style="height : 100 px; padding:.25%;">
+			<h1>{{form}}</h1>
+			<button id='SaveTool' dojoType="dijit.form.Button" type="button" disabled='true'>
+            		Save
+        		</button>
+
+			<input type="hidden" dojoType="dijit.form.TextBox" value={{ToolID}}  id="Tools"/>
+
+		</div>
+ 		
+
+		<div id="leftcol" style="width: 35%; height: 400px;padding:.25%;">
+                	<div id='InputTab' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+
+				<div id='InputsForm' dojoType="dojox.layout.ContentPane" title="Select Inputs">
+
+					<table>
+					<tr>
+					<td width="200px">  </td>
+					<td> </td>
+					</tr>
+
+					<h1>Inputs</h1>
+ 					<p>{{formIn}}</p>
+					</table>
+					<button id='SaveInputs' dojoType="dijit.form.Button" type="button" disabled='true'>
+            				Save
+        				</button>
+
+
+					<button id='NewVarIn' dojoType="dijit.form.Button" type="button" disabled='false'>
+            				Create New Variable
+        				</button>
+
+				</div>
+
+            		</div>
+
+		</div>
+ 		<div id="main">
+ 			<div id="rightcol" style="width: 35%; height: 400px;padding:.25%;">        
+				<div id='OutputTab' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+					<div id='OutputsForm' dojoType="dojox.layout.ContentPane" title="Select Outputs">
+
+					<table>
+					<tr>
+					<td width="200px">  </td>
+					<td> </td>
+					</tr>
+
+					<h1>Outputs</h1>
+ 					<p>{{formOut}}</p>
+					</table>
+					<button type="submit" id='SaveOutputs' dojoType="dijit.form.Button" type="button" disabled='true'>
+            				Save
+        				</button>
+					<button id='NewVarOut' dojoType="dijit.form.Button" type="button" disabled='false'>
+            				Create New Variable
+        				</button>
+					</div>
+				</div>
+ 			</div>
+ 			<div id="centercol" dojoType="dojox.layout.ContentPane" style="height: 400px;padding:.25%;">
+				<h1>EDSA</h1>
+ 				<br>
+				<br>
+				<form name="Run" action="/js/" method="get"  >
+				<input type="hidden" value={{ToolID}} name="Tools"/>
+				<button type="submit" id='Run' dojoType="dijit.form.Button" type="button" disabled='false'>
+            				Run Program
+        			</button>
+				</form>
+ 			</div>
+ 		</div>
+ 		<br id="footerbr" />
+ 		<div id="footer" dojoType="dojox.layout.ContentPane" style=" padding:.25%;">
+			<h1>Log</h1>
+		</div>
+ 	</body>
+ 
+ </html> 

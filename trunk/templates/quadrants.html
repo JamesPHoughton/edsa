@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+ 
+ <html xmlns="http://www.w3.org/1999/xhtml">
+ 
+ 	<head>
+ 		<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+ 		<title>Quad View</title>
+ 		<link href="/media/styles/quadrants.css" rel="stylesheet" type="text/css" />
+         	<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dijit/themes/tundra/tundra.css"/>
+		<script src='/media/scripts/dojo-1.4.3/dojo/dojo.js' type="text/javascript" djConfig="parseOnLoad: true">
+        	</script>
+        	<style type="text/css">
+            		body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+        	</style>
+	</head>
+	<body class="tundra">
+		<div dojoType="dijit._Widget" style="display:none;">
+			<script type="dojo/method" event="postCreate">
+                // create dijit.form.Select as a simple wrapper to dojox.form.DropDownSelect for Dojo < 1.4
+        			if (!dijit.form.Select) {
+        				dojo.declare("dijit.form.Select", dojox.form.DropDownSelect, {});
+                			}
+        		</script>
+
+
+<script type="text/javascript">
+        dojo.require("dijit.form.Button");
+        dojo.require("dijit.form.Select");
+	dojo.require("dijit.form.CheckBox");
+        dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dojox.form.FileInput");
+        dojo.require("dijit.form.ValidationTextBox");
+        dojo.require("dojox.html._base");
+	dojo.require("dojox.layout.ContentPane");
+	dojo.require('dojo.parser');
+	
+
+function Log(){
+	var targetNode=dojo.byId("UpLeft");
+	var url = window.location.href;
+	var split1 = url.split('=')[1];
+	var tool = split1.split('?')[0];
+	var xhrArgs={
+		url:"/log/",
+		handleAs:"text",
+		content:{
+			"Tools":tool
+			},
+		load:function(data){
+			dijit.byId('UpLeft').destroyDescendants();
+			targetNode.innerHTML=data;
+			dojo.parser.parse(dojo.byId('UpLeft'));
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);
+	}
+function Graph(){
+	var targetNode=dojo.byId("LowLeft");
+	var dict=new Object();
+	var url = window.location.href;
+	var split1 = url.split('=')[1];
+	var tool = split1.split('?')[0];
+	dict['quads']='quads';
+	dict['Tools']=tool;
+	var xhrArgs={
+		url:"/Tools/constraints/",
+		handleAs:"json",
+		content:dict,
+		load:function(data){
+			dijit.byId('LowLeft').destroyDescendants();
+			targetNode.innerHTML=data.html;
+			dojo.parser.parse(dojo.byId('LowLeft'));
+			dojo.connect(dijit.byId("Regraph"),'onClick', function() {
+				NewGraph()
+				Graph()
+				Log()
+                		});
+			},
+		}
+	var deferred=dojo.xhrGet(xhrArgs);	
+	}
+function NewGraph(){
+	var targetNode=dijit.byId("UpRight");
+	var Constraints=dijit.byId('LowLeft').getChildren();
+	var dict=new Object();
+	var url = window.location.href;
+	var split1 = url.split('=')[1];
+	var tool = split1.split('?')[0];
+	var points = url.split('=')[2];
+	dict['Tools']=tool;
+	dict['points']=points;
+	dict['quads']='quads';
+	dict['Xvar']=dijit.byId('id_Xvar').value;
+	dict['Yvar']=dijit.byId('id_Yvar').value;
+	for (it in Constraints){
+		dict[Constraints[it].id]=dijit.byId(Constraints[it].id).value
+		};
+	var xhrArgs={
+		preventCache:true,
+		url:"/Tools/stimulus/run/graph/",
+		handleAs:"json",
+		content:dict,
+		load:function(data){
+			dijit.byId('UpRight').destroyDescendants();
+			targetNode.innerHTML=data.html;
+			dojo.parser.parse(dojo.byId('UpRight'));			
+			},
+			
+		}
+	var deferred=dojo.xhrGet(xhrArgs);	
+	}
+function letItGraph(){
+	dijit.byId("Regraph").attr('disabled',!check_constraint_validation());
+	}
+function check_constraint_validation() {
+	var Constraints=dijit.byId('LowLeft').getChildren();
+	var idx = Constraints.indexOf('Regraph');
+	Constraints.splice(idx, 1);
+	var idx = Constraints.indexOf('id_Xvar');
+	Constraints.splice(idx, 1);
+	var idx = Constraints.indexOf('id_Yvar');
+	Constraints.splice(idx, 1);
+	if (! dijit.byId('id_Xvar').validate()){
+		return false;
+		}
+	if (! dijit.byId('id_Yvar').validate()){
+		return false;
+		}
+	for (it in Constraints){		
+		if (! dijit.byId(Constraints[it].id).validate()) {
+	      	        return false;
+			}	
+		} 
+	return true;    
+        }
+dojo.addOnLoad(function(){
+	Graph()
+	Log()
+	dojo.connect(dijit.byId("Regraph"),'onClick', function() {
+		NewGraph()
+		Graph()
+		Log()
+                });
+	});
+</script>
+
+		</div>
+
+
+		<div id="Header" dojoType="dojox.layout.ContentPane" style="height: 100 px; padding:.25%;">
+
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+			<br>
+		</div>
+		
+
+		<div id="UpLeft" dojoType="dojox.layout.ContentPane" style="height: 650px; padding:.25%;">
+			<p> logs </p>
+ 		</div>
+		<div id="UpRight" dojoType="dojox.layout.ContentPane" style="height: 650px; padding:.25%;">
+			<p> graphs </p>
+			<div id="Image" dojoType="dojox.layout.ContentPane">		
+			</div>
+ 		</div>	
+		
+		<div id="LowLeft" dojoType="dojox.layout.ContentPane" style="height: 400px; padding:.25%;">
+			<p> variables </p>
+ 		</div>
+		<div id="LowRight" dojoType="dojox.layout.ContentPane" style="height: 400px; padding:.25%;">
+			<p> console </p>
+
+			<br>
+			<p>>></p>
+ 		</div>
+		
+	</body>
+</html>

@@ -1,0 +1,59 @@
+body {
+    font-size: 12px;
+    font-family: Arial;
+}
+
+a.bigbutton {
+    background-color: #FF9999;
+    color: #000000;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #999999;
+}
+
+a.bigbutton:hover {
+    background-color: #FFCCCC;
+}
+
+.faint {
+    color: #999999;
+    letter-spacing: 2px;
+}
+
+a.header_title {
+    font-size: 8em;
+    font-weight: bold;
+    text-decoration: none;
+    color: #E2E2E2;
+    padding: 0px;
+    margin: 0px;
+    position: absolute;
+    left: 5px;
+    top: 0px;
+}
+
+p.header_info {
+    position: absolute;
+    left: 40px;
+    top: 30px;
+}
+
+a.remove_link {
+    color: red;
+    text-decoration: underline;
+}
+
+a.add_link {
+    color: blue;
+    text-decoration: underline;
+}
+
+ol.small {
+    margin: 0px;
+}
+
+input.jsontextbox {
+    border: 1px solid #999999;
+    font-size: 0.9em;
+    width: 60px;
+}

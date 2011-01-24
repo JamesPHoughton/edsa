@@ -1,0 +1,8 @@
+<input type="hidden" id="id_{{ name }}" name="{{ name }}" value="{{ value }}" />
+<div id="fileuploader_widget">
+    <div id="{{ name }}_btn0" class="browseFileBtn">Select File</div>
+</div>
+<button id="uploadBtn" dojoType="dijit.form.Button" type="button" class="uploadBtn" onclick="doUpload();">Upload File</button>
+<textarea cols="50" rows="6" id="fileToUpload" style="positioning: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px;"></textarea>
+<input type="text" id="postdata" value="Add Post Data Here" style="positioning: absolute; top: 0px; left: 0px; visibility: hidden; height: 0px;" />
+<div id="fileuploader_status">Please select and upload a file above.</div>

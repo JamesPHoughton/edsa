@@ -1,0 +1,22 @@
+<p>Adding a dependency for {{ task }}.</p>
+
+<p>Input variables not already satisfied by other dependencies:
+<ul>
+    {% for var in task.missing_inputs %}
+    <li>{{ var }}</li>
+    {% endfor %}
+</ul>
+</p>
+
+<p>Please choose either a task or a tool to add.</p>
+
+<form method="POST" action="/workflow/" id="add_dep_form">
+{{ add_form.as_p }}
+
+<button dojoType="dijit.form.Button" onClick="save_pane('/workflow/', ['add_dep_form', 'select_task_form'], 'tab_left', 'save_dependency', {default: 'start_dep', config: 'pane_left'});" name="submit_new_dependency">
+    Save
+</button>
+
+</form>
+
+<div id="current_task_html"></div>

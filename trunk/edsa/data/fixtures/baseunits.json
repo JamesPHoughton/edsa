@@ -1,0 +1,52 @@
+[
+    {
+        "pk": 1, 
+        "model": "data.baseunit", 
+        "fields": {
+            "symbol": "N", 
+            "quantity_expressed": 24, 
+            "name": "Newton", 
+            "system": 1
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "data.baseunit", 
+        "fields": {
+            "symbol": "m", 
+            "quantity_expressed": 1, 
+            "name": "meter", 
+            "system": 1
+        }
+    }, 
+    {
+        "pk": 3, 
+        "model": "data.baseunit", 
+        "fields": {
+            "symbol": "in", 
+            "quantity_expressed": 1, 
+            "name": "inch", 
+            "system": 2
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "data.baseunit", 
+        "fields": {
+            "symbol": "kg", 
+            "quantity_expressed": 2, 
+            "name": "kilogram", 
+            "system": 1
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "data.baseunit", 
+        "fields": {
+            "symbol": "rad", 
+            "quantity_expressed": 9, 
+            "name": "radian", 
+            "system": 1
+        }
+    }
+]

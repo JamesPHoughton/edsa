@@ -1,0 +1,35 @@
+
+
+
+
+  html, body {
+   margin: 0; padding:.5%; 
+ }
+ /*div { border: #000 1px solid; }*/
+ #Header { 
+
+	border: 0px; /*  #ccc 1px solid; */
+	}
+
+ #leftcol {
+   float: left;
+   width: 33%;
+   border: 0px; /*  #ccc 1px solid; */
+ }
+ #main {
+   margin: 0px;
+ }
+ #centercol {
+   border: 0px; /*  #ccc 1px solid; */
+   margin: 0 33% 0 33%;
+ }
+ #rightcol {
+   float: right;
+   width: 33%;
+   border: 0px; /*  #ccc 1px solid; */
+ }
+ #footer {
+   text-align: center;
+   border: 0px; /*  #ccc 1px solid; */
+ }
+ #footerbr { clear: both; } 

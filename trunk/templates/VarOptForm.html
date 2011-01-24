@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p> pick your variable values! <p>
+
+
+
+<form name="input" action="/Tools/stimulus" method="get" target='left'>
+<input type="hidden" value={{ToolID}}  name="Tools"/>
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+<input type="submit" value="Pick Values">
+</form>
+
+
+
+
+{% endblock %}

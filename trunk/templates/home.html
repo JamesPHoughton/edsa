@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript">
+        dojo.require("dijit.form.Button");
+        dojo.require("dojox.layout.ContentPane");
+	</script>
+{% endblock %}
+
+{% block content %}
+
+<p>
+This is the home page of your EDSA (Extensible Dataset Architecture) client.  The client can be used to set up and run numerical software tools on multiple computers associated with your project.
+</p>
+
+<br />
+
+<p align="center">
+<a class="bigbutton" href="/setup/">Use tools</a>
+<a class="bigbutton" href="/edit/">Manage tools</a>
+<a class="bigbutton" href="/workflow/">Manage workflows</a>
+<a class="bigbutton" href="/admin/">Administration pages</a>
+</p>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% if not machine_available %}
+    {% if multiple_tools %}
+    Not all of the selected tasks have a machine available to run them.
+    <ul>
+    {% for tool in tools %}
+    <li>Tool: <i>{{ tool }}</i><br />
+    Online machines: {% if tool.get_active_machines|length_is:0 %}None{% else %}{% for machine in tool.get_active_machines %}{{ machine }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %} <br />
+    All machines: {% if tool.machines.count == 0 %}None{% else %}{% for machine in tool.machines.all %}{{ machine.label }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}
+    </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    No machine is available to run the selected tool.
+    {% endif %}
+Machines hosting a tool need to be registered at the <a href="/edit/">tool editing area</a> and each must be running the EDSA daemon.
+{% else %}
+
+Use this form to adjust the execution parameters of the individual tools, if desired, and click "Run."
+
+{% if multiple_tools %}
+    <form id="multiple_tool_form">
+    <input type="hidden" name="task_id" value="{{ task.id }}" />
+    {% for form in tool_forms %}
+    <input type="hidden" name="form_prefix" value="{{ form.prefix }}" />
+    {% if form.machines|length_is:0 %}
+        {{ form.initial.tool }} is not currently available on any machines.
+    {% else %}
+        <p>Settings for <i>{{ form.initial.tool }}</i></p>
+        {{ form.as_p }}
+    {% endif %}
+    {% endfor %}
+    {% if machine_available %}
+        <button id="run_multiple_tools" dojoType="dijit.form.Button" onClick="update_form('/setup/', 'multiple_tool_form', {default: 'pane_configure', results: 'pane_results', log: 'footer'}, 'run_task');">
+            Run
+        </button>
+    {% endif %}
+    </form>
+{% else %}
+    <form id="single_tool_form">
+    <input type="hidden" name="tool_id" value="{{ tool_form.initial.tool.id }}" />
+    {{ tool_form.as_p }}
+    <button id="run_single_tool" dojoType="dijit.form.Button" onClick="update_form('/setup/', 'single_tool_form', {default: 'pane_configure', results: 'pane_results', log: 'footer'}, 'run_tool');">
+        Run
+    </button>
+    </form>
+{% endif %}
+
+{% endif %}

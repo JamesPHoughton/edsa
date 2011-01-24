@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}
+Running Tasks
+{% endblock %}
+
+{% block content %}
+Ran task on machine {{ task.tool.machine }} with result: {{ result }}
+<br />
+<a href="/tasks/view">Return to the task list</a>
+{% endblock %}
+
+

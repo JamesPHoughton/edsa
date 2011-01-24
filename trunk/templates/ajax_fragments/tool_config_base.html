@@ -1,0 +1,84 @@
+<p>
+<b>Now editing:</b> 
+{% if config_form.initial.tool_name %}
+    {{ config_form.initial.tool_name }},
+{% else %}
+    {% if config_form.data.tool_name %}
+        {{ config_form.data.tool_name }},
+    {% else %}
+        {{ config_form.fields.tool_name.initial }},
+    {% endif %}
+{% endif %} 
+{% if config_form.initial.version %}
+    version {{ config_form.initial.version }}
+{% else %}
+    {% if config_form.data.version %}
+        version {{ config_form.data.version }}
+    {% else %}
+        version {{ config_form.fields.version.initial }}
+    {% endif %}
+{% endif %}
+</p>
+
+<p>
+{% if not config_form.fields.existing_tool.initial %}
+    Please fill out this form to initialize your tool.  After this basic information is saved, you will be able to connect the tool with EDSA variables.
+{% else %}
+    This tool has been stored in the EDSA database.  You may edit it below.
+{% endif %}    
+</p>
+<form id="config_form" action="/edit/" method="post">
+    {% if config_form.fields.rpm and not config_form.fields.rpm.widget.is_hidden %}
+    <br />Don't see the Python module you want here?
+    <button id="AddRPM" dojoType="dijit.form.Button" type="button" onClick="add_pane('{{ request.path }}', 'config_form', 'tab_left', 'add_rpm', 'rpm_form_1', 'Register New Module');">
+            Create Module
+    </button>
+    {% endif %}
+    <table>
+        <tr>
+            <td width="200px">  </td>
+            <td> </td>
+        </tr>
+        {{ config_form }}
+
+    </table>
+    <button type="button" id="submit_config_form" dojoType="dijit.form.Button" disabled="false" onClick="update_form('{{ request.path }}', 'config_form', {default: 'pane_configure_tool', vars_in: 'pane_in_vars', vars_out: 'pane_out_vars'}, 'configure_tool');">
+        {% if config_form.fields.existing_tool.initial %}Save{% else %}Create{% endif %}
+    </button>
+</form>
+
+<table>
+    {% for item in variableprocessors %}
+    <tr>
+        <td><b>{{ item.label }}:</b></td>
+        <td>
+        {% for vp in item.vps %}
+        {{ vp.module.class_name }} for 
+            {% for var in vp.variables.all %}
+                {{ var.label }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}<br />
+            {% if vp.params %}<i>Parameters:</i>
+                <ol class="small">
+                {% for pair in vp.params.items %}
+                    <li>{{ pair.0 }} = {{ pair.1 }}</li>
+                {% endfor %}
+                </ol>
+            {% endif %}
+            <form id="{{ item.shortname }}_select_form_{{ vp.id }}">
+                <input type="hidden" name="vp_id" value="{{ vp.id }}" />
+                {% if not forloop.first %}
+                <a class="add_link" onclick="update_form('/edit/', ['config_form', '{{ item.shortname }}_select_form_{{ vp.id }}'], {default: 'pane_configure_tool', vars_in: 'pane_in_vars', vars_out: 'pane_out_vars'}, 'move_{{ item.name }}_up');">[ up ]</a>
+                {% endif %}
+                {% if not forloop.last %}
+                <a class="add_link" onclick="update_form('/edit/', ['config_form', '{{ item.shortname }}_select_form_{{ vp.id }}'], {default: 'pane_configure_tool', vars_in: 'pane_in_vars', vars_out: 'pane_out_vars'}, 'move_{{ item.name }}_down');">[ down ]</a>
+                {% endif %}
+                <a class="add_link" onclick="add_pane('/edit/', '{{ item.shortname }}_select_form_{{ vp.id }}', 'tab_left', 'edit_{{ item.name }}', 'tab_vp_form', 'Edit {{ item.label }}');">[ edit ]</a>
+                <a class="add_link" onclick="update_form('/edit/', ['config_form', '{{ item.shortname }}_select_form_{{ vp.id }}'], {default: 'pane_configure_tool'}, 'delete_{{ item.name }}');">[ delete ]</a>
+            </form>
+        {% endfor %}
+        <button dojoType="dijit.form.Button" id="add_{{ item.name }}_button" onClick="add_pane('/edit/', 'config_form', 'tab_left', 'edit_{{ item.name }}', 'tab_vp_form', 'New {{ item.label }}');">Add new {{ item.name }}</button>
+        <br />
+        </td>
+    </tr>
+    {% endfor %}
+</table>

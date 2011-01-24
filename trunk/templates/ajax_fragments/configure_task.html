@@ -1,0 +1,9 @@
+{% load dependencies %}
+
+<p>Setting dependencies for: {{ task.tool }}</p>
+
+<p>Dependency structure:
+<ul>
+{% render_dependencies task %}
+</ul>
+</p>

@@ -1,0 +1,18 @@
+
+<form id="var_in_form" action="/edit/ajax_update" method="GET">
+    <table>
+        <tr>
+            <td colspan="2">Use this form to tell EDSA which variables you would like to connect as inputs to your tool.  Your changes are saved immediately.</td>
+        </tr>
+        {{ var_in_form }}
+    </table>
+    {% comment %}
+    <button id='submit_var_in_form' dojoType="dijit.form.Button" type="button" onClick="save_pane('{{ request.path }}', ['var_in_form'], 'tab_center', 'save_vars', {default: 'pane_in_vars'});">
+        Save
+    </button>
+    {% endcomment %}
+    <br />Don't see the variable[s] you want here?
+    <button id="AddInputVariable" dojoType="dijit.form.Button" type="button" onClick="add_pane('{{ request.path }}', 'var_in_form', 'tab_center', 'add_variable', 'var_in_form_1', 'New Variable');">
+            Create Variable
+    </button>
+</form>

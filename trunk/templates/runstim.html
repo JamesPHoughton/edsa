@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head%}
+
+        <style type="text/css">
+            @import "../../_static/dojo/dojo/dojox/form/resources/DropDownSelect.css";
+        </style>
+{%endblock%}
+
+{% block content %}
+<script>
+    dojo.require("dojox.form.DropDownSelect");
+</script>
+<p> Ta da! <p>
+
+
+
+
+
+<form name="input" action="/log/" method="get" target="bottom">
+<input type="hidden" value='{{ToolID}}' name="Tools"/>
+
+
+<input type="submit" value="Logs" />
+</form>
+
+<INPUT TYPE="BUTTON" VALUE="Back" ONCLICK="window.location.href='http://127.0.0.1:8000/Tools/stimulus'">
+<br>
+<hr>
+
+
+<p>graphing</p>
+<form name="input" action="/Tools/stimulus/run/graph/" method="get" target="_blank">
+<input type="hidden" value='{{ToolID}}' name="Tools"/>
+<input type="hidden" value='{{points}}' name="points"/>
+<input type="hidden" value='{{Highbound}}' name="Highbound"/>
+<input type="hidden" value='{{Lowbound}}' name="Lowbound"/>
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+{{form}}
+</table>
+<br>
+<input type="submit" value="graph" />
+
+</form>
+
+{% endblock %}

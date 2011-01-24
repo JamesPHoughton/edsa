@@ -1,0 +1,25 @@
+<p> pick your constraint values! <p>
+
+<form name="input1" action="/Tools/stimulus/run/" method="get" target=center>
+<input type="hidden" value={{ToolID}} name="Tools"/>
+<input type="hidden" value='{{Inputs}}' name="inputs"/>
+<input type="hidden" value='{{points}}' name="points"/>
+
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+
+{{graphform}}
+
+<button id='Regraph' dojoType="dijit.form.Button" type="button" disabled='true'>
+Regraph
+</button>
+</form>
+

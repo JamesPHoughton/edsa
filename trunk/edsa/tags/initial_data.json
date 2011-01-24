@@ -1,0 +1,67 @@
+[
+    {
+        "pk": 3, 
+        "model": "tags.tag", 
+        "fields": {
+            "description": "We know the probability distribution of the value", 
+            "label": "Probabilistic"
+        }
+    }, 
+    {
+        "pk": 4, 
+        "model": "tags.tag", 
+        "fields": {
+            "description": "We have an expected value but not a probability distribution", 
+            "label": "Uncertain"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "tags.tag", 
+        "fields": {
+            "description": "We have no idea what the value is", 
+            "label": "Wild guess"
+        }
+    }, 
+    {
+        "pk": 2, 
+        "model": "tags.tag", 
+        "fields": {
+            "description": "The value is known precisely", 
+            "label": "Exact"
+        }
+    }, 
+    {
+        "pk": 5, 
+        "model": "tags.tag", 
+        "fields": {
+            "description": "", 
+            "label": "Result"
+        }
+    }, 
+    {
+        "pk": 1, 
+        "model": "tags.datacategory", 
+        "fields": {}
+    }, 
+    {
+        "pk": 2, 
+        "model": "tags.datacategory", 
+        "fields": {}
+    }, 
+    {
+        "pk": 3, 
+        "model": "tags.datacategory", 
+        "fields": {}
+    }, 
+    {
+        "pk": 4, 
+        "model": "tags.datacategory", 
+        "fields": {}
+    }, 
+    {
+        "pk": 5, 
+        "model": "tags.datacategory", 
+        "fields": {}
+    }
+]

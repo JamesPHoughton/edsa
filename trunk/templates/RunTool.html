@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Run Tool
+{% endblock %}   
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="/media/styles/create.css" />
+{% endblock %}  
+
+{% block content %}
+    <div id="Header" dojoType="dojox.layout.ContentPane" style="height: 100px; padding: 5px;">
+        <div id='tab_header' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+            <div id='pane_select_tool' dojoType="dojox.layout.ContentPane" title="Select a tool to use">
+                <form method="POST" action="/setup/update_tool_name" id="select_tool_form">
+                <p>{{ select_tool_form.as_p }}</p>
+                </form>
+            </div>
+            <div id='pane_select_task' dojoType="dojox.layout.ContentPane" title="Select a task to use">
+                <form method="POST" action="/setup/update_task_name" id="select_task_form">
+                <p>{{ select_task_form.as_p }}</p>
+                </form>
+            </div>
+            <div id='pane_select_stimulus' dojoType="dojox.layout.ContentPane" title="Select a stimulus task to use">
+                <form method="POST" action="/setup/update_stimulus_name" id="select_stimulus_form">
+                <p>{{ select_stimulus_form.as_p }}</p>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+        <div id="leftcol" dojoType="dojox.layout.ContentPane" style="height: 400px; padding: 5px;">
+            <div id='tab_left' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+                <div id='pane_inputs' dojoType="dojox.layout.ContentPane" title="Specify Inputs">
+                Select a tool above to proceed.
+                </div>
+            </div>
+        </div>
+    
+    <div id="main">
+        <div id="rightcol" dojoType="dojox.layout.ContentPane" style="width: 33%; height: 400px; padding: 5px;">            <div id='tab_right' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+                <div id='pane_results' dojoType="dojox.layout.ContentPane" title="View Results">
+
+                </div>
+            </div>
+        </div>
+        
+    <div id="centercol" dojoType="dojox.layout.ContentPane" style="height: 400px; padding: 5px;">
+        <div id='tab_center' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+            <div id='pane_configure' dojoType="dojox.layout.ContentPane" title="Configure and Run">
+            Select a tool above to proceed.
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <br id="footerbr" />
+    <div id="footer" dojoType="dojox.layout.ContentPane" style=" padding:.25%;">
+        <p>Log information will be loaded here once a tool is selected.</p>
+    </div>
+{% endblock %}        

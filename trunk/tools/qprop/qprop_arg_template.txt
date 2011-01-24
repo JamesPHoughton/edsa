@@ -1,0 +1,1 @@
+qprop/prop.txt qprop/motor.txt {{ V }} 0 0 0 {{ T }} 0 0 0

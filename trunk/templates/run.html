@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p> <p>
+
+
+
+{{form}}
+
+
+<form name="input" action="/log/" method="get" target="bottom">
+
+
+<input type="submit" value="Execute" />
+</form>
+
+
+<INPUT TYPE="BUTTON" VALUE="Back" ONCLICK="window.location.href='http://127.0.0.1:8000/Tools/Variables'">
+{% endblock %}

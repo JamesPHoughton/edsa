@@ -1,0 +1,18 @@
+
+{% if using_tool %}
+    Result of running tool: {{ result }}
+{% else %}
+    Results of running tools (in order):
+    <ol>
+    {% for item in results %}
+    <li><i>{{ item.tool }}</i>: {{ item.result }}</li>
+    {% endfor %}
+    </ol>
+{% endif %}
+
+<p>Output variables:</p>
+<ul>
+{% for var in variables %}
+<li>{{ var.latest_value }}</li>
+{% endfor %}
+</ul>

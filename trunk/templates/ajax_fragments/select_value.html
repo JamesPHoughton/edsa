@@ -1,0 +1,11 @@
+<p>Selecting a previous value for: {{ variable }}</p>
+
+<p>Last value: {{ variable.latest_value }}</p>
+
+<form id="select_value_form">
+{{ value_form.as_p }}
+<button id="save_select_value" dojoType="dijit.form.Button" onClick="save_pane('/setup/', ['select_value_form'], 'tab_left', 'save_value', {vars_in: 'pane_inputs', config: 'pane_configure', default: 'var_edit_{{ variable.id }}'});">
+    Save
+</button>
+</form>
+

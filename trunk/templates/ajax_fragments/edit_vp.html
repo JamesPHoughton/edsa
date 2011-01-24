@@ -1,0 +1,16 @@
+<p>
+<b>Now editing:</b> {% if vp %}{{ vp }}{% else %}New {{ vp_form.dir_label }}{% endif %}
+</p>
+
+<form id="vp_form" action="/edit/" method="post">
+    <table>
+        <tr>
+            <td width="80px">  </td>
+            <td> </td>
+        </tr>
+        {{ vp_form }}
+    </table>
+    <button type="button" id="submit_vp_form" onClick="save_pane('{{ request.path }}', ['vp_form', 'config_form'], 'tab_left', 'save_vp', {tool_config: 'pane_configure_tool', default: 'tab_vp_form'});">
+        Save
+    </button>
+</form>

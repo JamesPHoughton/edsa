@@ -1,0 +1,43 @@
+<p> pick your variable values! <p>
+
+
+<form name="input" action="/Tools/constraints/" method="get" target="right" >
+<input type="hidden" value={{ToolID}} name="Tools"/>
+<table>
+<tr>
+<td width="300px">  </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+</form>
+
+{% if command_line %}
+<p>You have selected a command line tool.  Please choose which variables you would like to dump as command line arguments:</p>
+<table>
+    <tr>
+        <td>Position</td>
+        <td>Variable</td>
+    </tr>
+    {% for field in argument_form %}
+    <tr>
+        <td>{{ field.0 }}</td>
+        <td>{{ field.1 }} </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+ 
+
+        <button id='backButton' dojoType="dijit.form.Button" type="button">
+            back
+
+
+        </button>
