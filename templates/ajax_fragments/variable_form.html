@@ -1,0 +1,16 @@
+
+<form id="variable_{{ direction }}_form" action="/edit/ajax_update" method="GET">
+    <table>
+        <tr>
+            <td colspan="2">Please describe your variable.</td>
+        </tr>
+        {{ var_form }}
+    </table>
+    <button id='submit_var_form' dojoType="dijit.form.Button" type="button" onClick="save_pane('{{ request.path }}', ['variable_{{ direction }}_form', 'var_{{ direction }}_form'], 'tab_{{ tab }}', 'save_variable', {default: 'var_{{ direction }}_form_1', inputs: 'pane_in_vars', outputs: 'pane_out_vars'});">
+        Save
+    </button>
+    <br />Need to add a unit to the system?
+    <button id="AddUnit_{{ direction }}" dojoType="dijit.form.Button" type="button" onClick="add_pane('{{ request.path }}', 'variable_{{ direction }}_form', 'tab_{{ tab }}', 'add_unit', 'unit_{{ direction }}_form_1', 'New Unit');">
+            Create Unit
+    </button>
+</form>

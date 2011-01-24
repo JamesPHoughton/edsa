@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p> Your Results! <p>
+
+
+
+{{results}}
+<form name="input" action="/log/" method="get" target="bottom">
+
+
+<input type="submit" value="Execute" />
+</form>
+
+
+
+
+{% endblock %}

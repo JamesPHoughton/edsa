@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+Available Tasks
+{% endblock %}
+
+{% block content %}
+Hi... 
+
+{% if tasks_available|length_is:0 %}
+    No tasks are available.  Make sure the EDSA server is running.
+{% else %}
+    Available tasks are
+    <ul>
+    {% for item in tasks_available.values %}
+        <li>{{ item }} <br />
+        Inputs: {% for var in item.tool.inputs.all %}{{ var.label }} = {{ var.current_data }}{% if not forloop.last %}, {% endif %}{% endfor %} <br />
+        Machines: {% for instance in item.instances %}{{ instance.machine_name }}{% if instance.version %} (version {{ instance.version }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}
+        <br />
+        {% if item.instances|length > 1 %}
+        Run this task on:
+            <a href="/tasks/run?id={{ item.id }}">Any machine</a>; {% for instance in item.instances %} <a href="/tasks/run?id={{ item.id }}&machine={{ instance.machine_name }}{% if instance.version %}&version={{ instance.version }}{% endif %}">{{ instance.machine_name }}{% if instance.version %} (version {{ instance.version }}){% endif %}</a>{% if not forloop.last %}; {% endif %}{% endfor %}
+        {% else %}
+            <a href="/tasks/run?id={{ item.id }}&machine={{ item.instances.0.machine_name }}">Run this task on {{ item.instances.0.machine_name }}</a>
+        {% endif %}
+        <br />
+        {% if item.instances|length > 1 %}
+        Run this task and its dependencies on:
+            <a href="/tasks/run?id={{ item.id }}&deps=1">Any machine</a>; {% for instance in item.instances %} <a href="/tasks/run?id={{ item.id }}&machine={{ instance.machine_name }}{% if instance.version %}&version={{ instance.version }}{% endif %}&deps=1">{{ instance.machine_name }}{% if instance.version %} (version {{ instance.version }}){% endif %}</a>{% if not forloop.last %}; {% endif %}{% endfor %}
+        {% else %}
+            <a href="/tasks/run?id={{ item.id }}&machine={{ item.instances.0.machine_name }}&deps=1">Run this task on {{ item.instances.0.machine_name }}</a>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endblock %}
+

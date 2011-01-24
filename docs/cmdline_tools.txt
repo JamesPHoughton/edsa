@@ -1,0 +1,57 @@
+Command-line tools
+
+See also: "Python tools," "Data formats"
+
+EDSA can invoke software tools from the command line as well as within Python.  This is where the real power of EDSA lies: you can use tools of your own design alongside large commercial software packages.
+
+How it works
+
+EDSA uses PYRO (Python Remote Objects) and Python's subprocess library to spawn processes on remote machines.  These components allow remote processes to be run much like local processes: change to the desired working directory, specify the proper executable and command line arguments, and supply commands and data via standard input.  
+
+The main challenge is connecting the inputs and outputs of command-line tools to other tools in the EDSA project.  Every command-line tool works a little differently.  They all define their own command-line options and their own procedures for providing data (sometimes from standard input, sometimes from one or more files).  Furthermore, the format of the data itself is up to the tool: some want binary data, some want comma-separated text, some want XML, etc.  The output is also different: some tools spit results out to standard output, some write files, and some use a combination of the two.  EDSA allows you to write the necessary adapters, and also provides some commonly needed ones.  
+
+Variable processors
+
+Recall that data values in EDSA can be stored in a database (as pickled Python objects) or in files on any machine.  To interface with each tool, the EDSA client passes these values through a set of filters on their way in and on their way out.  These filters are configurable Python classes called "variable processors" and fall into two categories: "invokers" and "capturers."  Each tool can be associated with a list of invokers and a list of capturers.  The invokers are executed in the specified order to prepare data before the tool is invoked.  Each invoker can modify a state object that is passed on to subsequent invokers and capturers.  For example, if invoker A writes to a file, it can save the file name in the state object so that invoker B can provide this file name to the tool.  Similarly, capturers are executed in the specified order after the tool is invoked.
+
+Invokers can write their output to command-line arguments, standard input, or a file.  Capturers can read their input from standard output, standard error, or a file.  Each invoker or capturer is linked to a set of variables that it handles.  These are some of the invokers and capturers that are already present in EDSA:
+Invokers (edsa.clients.invokers):
+- StringDump: Prints the selected variables as command-line arguments for the tool.  No parameters.
+- PlainFileDump: Prints the selected variables into temporary files whose names are passed on to the tool.  No parameters.
+- TemplateFileDump: Uses Django's template library to save the variables in a temporary file with arbitrary formatting (much like a mail merge).  Parameters: 
+  + template: the name of the template file to use (on the EDSA tool path).
+  + filename (optional): if the output should be written to a file rather than standard input, this is where it should go.
+  + Arbitrary optional parameters will be included in the context dictionary used to render the template.
+Capturers (edsa.clients.capturers):
+- PlainStringCapturer: Reads the variable from the standard output stream.  No parameters.
+- RegexpCapturer: Reads text from standard output or a file and matches a supplied regular expression against the text.  Named groups in the regular expression correspond to the names of variables to be parsed.  Parameters:
+  + regexp: the regular expression to use in parsing
+  + filename (optional): the name of the file to parse (if applicable)
+
+You may create your own by subclassing the Invoker (or Capturer) class and overriding the run() method.
+
+Setting up a command-line tool
+
+Command-line tools can be set up from the tool managment page (from the home page of the client, click "Manage tools").  Enter the name and version of the tool and proceed to designate its "Tool type" as "Command-line tool."  You will be presented with additional prompts.  The "machines" should represent the set of machines that have this tool installed.  The "commands" should be a shell command that needs to be executed to invoke the tool.  Click the "Create" button to save this information.  Now you will see forms for setting the input and output variables of the tool, which is done the same way as for Python tools.  You will also see buttons in the left pane that control the invokers and capturers.  
+
+It will probably take some thought to properly design the invokers and capturers for most tools.  Here is an example of the setup needed to operate XFOIL to compute lift and drag coefficients.
+- Input variables:
+  + r_par: Wing shape in x, y array
+  + Re: Reynolds number
+  + alpha: Angle of attack
+- Output variables:
+  + C_L: Lift coefficient
+  + C_D: Drag coefficient
+- Invokers (in this order):
+  + TemplateFileDump for variable r_par; destination: file
+    * template: xfoil/wing_parametric.txt
+    * filename: xfoil/wing_input.txt
+    This template prints out the r_par value (an Nx2 Python array, with a column of x values and a column of y values) into a text file that will be used by XFOIL.
+  + TemplateFileDump for variables r_par, Re, alpha; destination: stdin
+    * template: xfoil/xfoil_command_template.txt
+    * output_filename: xfoil/xfoil_result.txt
+    This template generates the XFOIL commands needed to compute lift and drag coefficients based on the provided data.  Because the r_par value has already been written to a file, its placeholder in the template is replaced by the file name rather than the contents of the value.  The output_filename parameter is used in the template (so it can be changed through the EDSA client without modifying the template).
+- Capturers:
+  + RegexpCapturer for variables C_L, C_D; source: stdout
+    * regexp: -{4,}\s*\n+\s*(?P<alpha>-?\d*\.?\d*)\s*(?P<C_L>-?\d*\.?\d*)\s*(?P<C_D>-?\d*\.?\d*)\s*(?P<C_Dp>-?\d*\.?\d*)\s*(?P<C_M>-?\d*\.?\d*)\s*
+    This regular expression matches a row of the XFOIL polar output.  The named groups C_D and C_L are used to match the floating-point values that XFOIL writes.

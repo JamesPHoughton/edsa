@@ -1,0 +1,13 @@
+load dae11.dat
+OPER
+VISC
+500000
+ITER
+20
+pacc
+Xfoil_outfile.txt
+
+Alfa 5
+pacc
+
+quit

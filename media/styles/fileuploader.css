@@ -1,0 +1,29 @@
+<style type="text/css">
+/* file uploader */
+.browseFileBtn {
+    vertical-align: middle; /* emulates a <button> if node is not */
+    text-align: center;
+}
+
+.dojoxUploaderNorm {
+    background-position: top left; /* Fix under IE7 cannot display background image for uploader button. */
+    font-family: verdana, arial, helvetica, sans-serif; /* same as screen.css */
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.uploadBtn .dijitButtonNode button {
+    height: 17px; /* makes upload button consistent with browser button */
+    font-size: 1em; /* Fix under IE7 button does not inherit font-size. */
+}
+
+#fileuploader_widget{
+    border: 1px solid #CCCCCC;
+    width: 150px;
+    color: #0000FF;
+    text-align: center;
+    padding: 6px;
+    background-color:transparent;
+}
+
+</style>

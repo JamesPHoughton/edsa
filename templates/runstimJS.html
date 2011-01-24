@@ -1,0 +1,34 @@
+<p> Ta da! <p>
+<button id='EXECUTE' dojoType="dijit.form.Button" type="button" disabled='false'>
+EXECUTE
+</button>
+
+<br>
+
+
+
+<p>graphing</p>
+<form name="input" action="/Tools/stimulus/run/graph/" method="get" target="_blank">
+
+<input id='points' type="hidden" value='{{points}}' dojoType="dijit.form.TextBox" name="points"/>
+
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+{{form}}
+</table>
+<br>
+
+
+        <button id='graphButton' dojoType="dijit.form.Button" type="button" disabled='true'>
+            Graph
+
+
+        </button>
+
+</form>
+
+

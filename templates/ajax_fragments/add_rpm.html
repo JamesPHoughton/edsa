@@ -1,0 +1,11 @@
+<form id="rpm_form" action="/edit/save_pane" method="GET">
+    <table>
+        <tr>
+            <th colspan="2">Use this form to tell EDSA about a Python module you would like to use.</th>
+        </tr>
+        {{ rpm_form }}
+    </table>
+    <button id='SaveRPM' dojoType="dijit.form.Button" type="button" onClick="save_pane('{{ request.path }}', ['config_form', 'rpm_form'], 'tab_left', 'save_rpm', {default: 'rpm_form_1', config: 'pane_configure_tool'});">
+        Save
+    </button>
+</form>

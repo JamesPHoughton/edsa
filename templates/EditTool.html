@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<p> Edit Tool {{ToolName}}</p>
+
+
+<form name="input" action="/edit/noninteractive" method="get" target=''>
+<input type="hidden" value={{ToolID}}  name="Tools"/>
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+<input type="submit" value="Submit">
+</form>
+
+{% endblock %}

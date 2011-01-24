@@ -1,0 +1,13 @@
+load {{ r_par }}
+OPER
+VISC
+{{ Re }}
+ITER
+100
+pacc
+{{ output_filename }}
+
+Alfa {{ alpha }}
+pacc
+
+quit

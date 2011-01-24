@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+Variables
+{% endblock %}
+
+{% block content %}
+<h2>Variables</h2>
+<ul>
+{% for var in variables %}
+<a id="link_{{ var.id }}" href="/data/last_value?id={{ var.id }}">{{ var.label }}</a> <div id="value_{{ var.id }}"></div>
+{% endfor %}
+</ul>
+
+<script type="text/javascript">
+<!--
+{% for var in variables %}
+    register_link({id: "link_{{ var.id }}", url: "/data/last_value/?id={{ var.id }}"});
+{% endfor %}
+-->
+</script>
+
+{% endblock %}

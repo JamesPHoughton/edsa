@@ -1,0 +1,12 @@
+
+<form id="unit_{{ direction }}_form" action="/edit/ajax_update" method="GET">
+    <table>
+        <tr>
+            <td colspan="2">Please describe your unit.</td>
+        </tr>
+        {{ unit_form }}
+    </table>
+    <button id='submit_unit_{{ direction }}_form' dojoType="dijit.form.Button" type="button" onClick="save_pane('{{ request.path }}', ['unit_{{ direction }}_form', 'variable_{{ direction }}_form'], 'tab_{{ tab }}', 'save_unit', {default: 'unit_{{ direction }}_form_1', variable: 'var_{{ direction }}_form_1'});">
+        Save
+    </button>
+</form>

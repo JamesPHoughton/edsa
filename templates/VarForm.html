@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block head %}
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dijit/themes/tundra/tundra.css"
+        />
+  	<link rel="stylesheet" href="$dojo/dojox/form/resources/FileInput.css" />
+        <style type="text/css">
+            body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+        </style>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.4/dojo/dojo.xd.js"
+    djConfig="parseOnLoad: true">
+    </script>
+
+{% endblock %}
+{% block content %}
+<p> pick your variable values! <p>
+
+    <script type="text/javascript">
+        dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dojox.form.FileInput");
+        dojo.require("dijit.form.ValidationTextBox");
+        dojo.require("dijit.form.CheckBox");
+    </script>
+
+
+<form name="input" action="/Tools/constraints" method="get" target='right'>
+<input type="hidden" value={{ToolID}}  name="Tools"/>
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+<input type="submit" value="Execute">
+</form>
+
+<INPUT TYPE="BUTTON" VALUE="Back" ONCLICK="window.location.href='http://127.0.0.1:8000/Tools/Optvariables/'">
+{% endblock %}

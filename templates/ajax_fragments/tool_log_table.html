@@ -1,0 +1,9 @@
+<table>
+	{% for row in log %}
+        <tr>
+        	{% for value in row %}
+		<td>{{ value }}</td>
+		{% endfor %}
+        </tr>
+        {% endfor %}
+</table>

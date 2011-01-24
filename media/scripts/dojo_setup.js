@@ -1,0 +1,13 @@
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.Select");
+dojo.require("dijit.form.MultiSelect");
+dojo.require("dijit.form.CheckBox");
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dojox.form.FileInput");
+dojo.require("dojox.form.FileUploader");
+dojo.require("dijit.form.ValidationTextBox");
+dojo.require("dojox.html._base");
+dojo.require("dojox.layout.ContentPane");
+dojo.require("dojo.parser");
+dojo.require("dijit.layout.TabContainer");
+dojo.require("dijit.form.Textarea");

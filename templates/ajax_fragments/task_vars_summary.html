@@ -1,0 +1,28 @@
+{% if task %}
+<p>Preparing to run: <b>{{ task }}</b></p>
+The following tools will be run, in this order:
+<ol>
+{% for tool in tools %}
+<li>{{ tool }}</li>
+{% endfor %}
+</ol>
+{% else %}
+<p>Preparing to run: <b>{{ tool }}</b></p>
+{% endif %}
+
+<p>Input variables:</p>
+<ul>
+{% for var in variables %}
+<li>{% if var.latest_value %}{{ var.latest_value }} {% else %}<span style="color: #990000;">{{ var.label }} -- No value</span>{% endif %}
+<form id="var_summary_{{ var.id }}">
+{% if tool %}
+    <input type="hidden" name="tool" value="{{ tool.id }}" />
+{% else %}
+    <input type="hidden" name="task" value="{{ task.id }}" />
+{% endif %}
+<a class="add_link" onClick="add_pane('/setup/', 'var_summary_{{ var.id }}', 'tab_left', 'edit_value', 'var_edit_{{ var.id }}', 'Edit Value')">[ edit ]</a>
+<a class="add_link" onClick="add_pane('/setup/', 'var_summary_{{ var.id }}', 'tab_left', 'select_value', 'var_edit_{{ var.id }}', 'Select Value')">[ select recent ]</a>
+</form>
+</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Manage Tools
+{% endblock %}   
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="/media/styles/create.css" />
+{% endblock %}  
+
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript">
+    function ToolSave()
+    {
+        dijit.byId("submit_create_form").attr('disabled',!check_Tool_validation());
+	}
+    function check_Tool_validation() 
+    {
+        if (! dijit.byId('id_tool_name').validate())
+        {
+            return false;
+        };
+
+        return true;
+	}
+    </script>
+{% endblock %}    
+    
+{% block content %}
+		<div id="Header" dojoType="dojox.layout.ContentPane" style="height : 150px; padding: 5px;">
+            <div id='tab_header' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+                <div id='pane_create_tool' dojoType="dojox.layout.ContentPane" title="Create a new tool">
+                    <form method="POST" action="/edit/update_tool_name" id="create_tool_form">
+                    <p>{{ create_form.as_p }}</p>
+                    <button id='submit_create_form' dojoType="dijit.form.Button" type="button" disabled="disabled" onClick="update_form('{{ request.path }}', 'create_tool_form', 'pane_configure_tool', 'init_tool');">
+                        Start
+                    </button>
+                    </form>
+                </div>
+                <div id='pane_edit_tool' dojoType="dojox.layout.ContentPane" title="Edit an existing tool">
+                    <form method="POST" action="/edit/update_tool_name" id="select_tool_form">
+                    <p>{{ select_form.as_p }}</p>
+                    </form>
+                </div>
+            </div>
+		</div>
+        
+ 		 	<div id="leftcol" dojoType="dojox.layout.ContentPane" style="height: 600px; padding: 5px;">
+				<div id='tab_left' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+					<div id='pane_configure_tool' dojoType="dojox.layout.ContentPane" title="Configure Tool">
+                    {% if config_form %}
+                        {% include "ajax_fragments/tool_config_base.html %}
+                    {% else %}
+                        Click 'Start' above or select an existing tool to proceed.
+                    {% endif %}
+					</div>
+				</div>
+ 			</div>
+        
+        <div id="main">
+            <div id="rightcol" dojoType="dojox.layout.ContentPane" style="width: 33%; height: 600px; padding: 5px;">        
+				<div id='tab_right' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+					<div id='pane_out_vars' dojoType="dojox.layout.ContentPane" title="Select Outputs">
+                {% if var_out_form %}
+					{% include "ajax_fragments/var_out_config.html" %}
+                {% else %}
+                    Configure the basic aspects of your tool (left panel) to proceed.
+                {% endif %}
+					</div>
+				</div>
+ 			</div>
+            
+        <div id="centercol" dojoType="dojox.layout.ContentPane" style="height: 600px; padding: 5px;">
+            <div id='tab_center' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+				<div id='pane_in_vars' dojoType="dojox.layout.ContentPane" title="Select Inputs">
+                {% if var_in_form %}
+					{% include "ajax_fragments/var_in_config.html" %}
+                {% else %}
+                    Configure the basic aspects of your tool (left panel) to proceed.
+                {% endif %}
+				</div>
+            </div>
+ 		</div>
+
+ 		</div>
+ 		<br id="footerbr" />
+ 		<div id="footer" dojoType="dojox.layout.ContentPane" style=" padding:.25%;">
+			<p>Log information will be loaded here once a tool is created or selected.</p>
+		</div>
+{% endblock %}

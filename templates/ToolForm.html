@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block head%}
+
+        <style type="text/css">
+            @import "../../_static/dojo/dojo/dojox/form/resources/DropDownSelect.css";
+        </style>
+{%endblock%}
+
+
+{% block content %}
+<script>
+    dojo.require("dojox.form.DropDownSelect");
+</script>
+<p> pick your tool! <p>
+
+
+<form name="input" action="variables/" method="get" target="left">
+{{form}}
+
+
+<input type="submit" value="For Single Run" />
+</form>
+
+<br>
+<br>
+
+<form name="input2" action="Optvariables/" method="get" target="left">
+{{form2}}
+
+
+<input type="submit" value="For Optimization" />
+</form>
+
+<INPUT TYPE="BUTTON" VALUE="Back" ONCLICK="window.location.href='http://127.0.0.1:8000/EDSA'">
+
+
+{% endblock %}

@@ -1,0 +1,39 @@
+
+
+
+
+  html, body {
+   margin: 0; padding:.5%; 
+ }
+ /*div { border: #000 1px solid; }*/
+ #Header { 
+
+	border: #000 1px solid; 
+	}
+
+ #UpLeft {
+   float: left;
+   width: 49.25%;
+   border: #000 1px solid;
+ }
+
+ #UpRight {
+   float: right;
+   width: 49.25%;
+   border: #000 1px solid;
+ }
+ #LowLeft {
+   float: left;
+   width: 49.375%;
+   border: #000 1px solid;
+ }
+
+ #LowRight {
+   float: right;
+   width: 49.375%;
+   border: #000 1px solid;
+ }
+
+
+
+ #footerbr { clear: both; } 

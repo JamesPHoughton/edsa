@@ -1,0 +1,16 @@
+Data formats
+
+EDSA handles the transfer of data from one tool to another in arbitrary format.  This is performed using Python's pickle library, which serializes arbitrary data types into bytestrings that are saved in text fields in your project's database.  While this allows a great deal of flexibility, it also requires an understanding on the part of the user to select the most effective data types and avoid type-related mistakes.
+
+Every Python object has a type, and most tools depend on having the right type for each of their input values.  This is not usually a problem for scalar values, since Python has a built-in double-precision type (float) which is good enough.  However, when you start using vectors, matrices and more complicated data structures (e.g. geometric models), there are often many data types that can be used.  Furthermore, different types may be defined in different Python libraries, or they may not be defined in Python at all.  
+
+Python data types should be limited to types that are present on the machine using them.  For example, you can define a specialized data structure (class) for a set of tools if all machines running those tools can import the class without modifications to their Python path.  The EDSA client includes numpy, which has a container class (numpy.array) for arrays of arbitrary dimension containing objects of arbitrary type.  
+
+Any value that cannot be expressed in a Python data type should be stored as a bytestring (str); it is the responsibility of your invokers and capturers to translate between this string and the internal formats used by non-Python software tools.  Textual values should be stored as str or unicode.
+
+File proxies
+
+Tools may generate large quantities of data, some or all of which may not be needed on other machines.  To save network bandwidth, we don't want to send all of the data to the central database and then from the central database to the machines that need it.  Instead, data can be saved to a file on the machine on which it was generated.  Information about this file is sent to the database, and other machines can access a proxy to the file as necessary.  
+
+Generating and using file proxies is the responsibility of Python tools and invokers/capturers for command-line tools.  Files should be written locally into the EDSA storage folder (edsa.settings.EDSA_STORAGE_DIR).  The Python file object should be wrapped in a BasicFile and then saved in the EDSA database as a FileValue.  This FileValue can then be assigned to the data property of a DataValue, allowing the contents of the file to be read by any machine on the network.  This two-level interface is provided in order to support other types (besides BasicFile) for wrapping remote data.
+

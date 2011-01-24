@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block head %}
+
+
+{% endblock %}
+{% block content %}
+    <script type="text/javascript">
+        dojo.require("dijit.form.NumberTextBox");
+	dojo.require("dojox.form.FileInput");
+        dojo.require("dijit.form.ValidationTextBox");
+        dojo.require("dijit.form.CheckBox");
+    </script>
+<p> pick your variable values! <p>
+
+
+<form name="input" action="/Tools/constraints/" method="get" target="right" >
+<input type="hidden" value={{ToolID}} name="Tools"/>
+<table>
+<tr>
+<td width="300px">  </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+
+<input type="submit" value="Execute" />
+</form>
+
+<INPUT TYPE="BUTTON" VALUE="Back" ONCLICK="window.location.href='http://127.0.0.1:8000/Tools'">
+{% endblock %}

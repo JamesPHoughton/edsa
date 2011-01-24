@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form name="input" action="/Tools/stimulus/run/graph/" method="get" target=''>
+<input type="hidden" value={{ToolID}} name="Tools"/>
+<input type="hidden" value='{{Xvar}}' name="Xvar"/>
+<input type="hidden" value='{{Yvar}}' name="Yvar"/>
+<input type="hidden" value='{{points}}' name="points"/>
+
+<table>
+<tr>
+<td width="200px">  </td>
+<td> </td>
+</tr>
+
+
+{{form}}
+</table>
+<input type="submit" value="Change" />
+</form>
+
+<p> Graph <p>
+
+
+<IMG src="/media/images/test.png">
+
+{% endblock %}

@@ -1,0 +1,17 @@
+<form method="POST" action="/workflow/" id="start_dep_form_{{ task.id }}">
+    <input type="hidden" name="task" value="{{ task.id }}" />
+    <input type="hidden" name="parent" value="{{ parent_id }}" />
+    <input type="hidden" name="root" value="{{ root_id }}" />
+    {% comment %}
+    {% for item in history %}
+    <input type="hidden" name="history" value="{{ item }}" />
+    {% endfor %}
+    {% endcomment %}
+    {% if not history|length_is:0 %}
+    <input type="hidden" name="history" value="{% for item in history %}{{ item }}{% if not forloop.last %},{% endif %}{% endfor %}" />
+    {% endif %}
+    {% if parent_id > 0 %}
+    <a class="remove_link" onClick="update_form('/workflow/', 'start_dep_form_{{ task.id }}', 'pane_left', 'remove_dependency');">Remove</a>
+    {% endif %}
+    <a class="add_link" onClick="add_pane('/workflow/', 'start_dep_form_{{ task.id }}', 'tab_left', 'add_dependency', 'start_dep', 'Add Dependency');">Add dependency here</a>
+</form>

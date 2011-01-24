@@ -1,0 +1,18 @@
+
+<form id="var_out_form" action="/edit/ajax_update" method="GET">
+    <table>
+        <tr>
+            <td colspan="2">Use this form to tell EDSA which variables you would like to connect as outputs of your tool.  Your changes are saved immediately.</th>
+        </tr>
+        {{ var_out_form }}
+    </table>
+    {% comment %}
+    <button id='submit_var_out_form' dojoType="dijit.form.Button" type="button" onClick="'{{ request.path }}', save_pane(['var_out_form'], 'tab_right', 'save_vars', {default: 'pane_out_vars'});">
+        Save
+    </button>
+    {% endcomment %}
+    <br />Don't see the variable[s] you want here?
+    <button id="AddOutputVariable" dojoType="dijit.form.Button" type="button" onClick="add_pane('{{ request.path }}', 'var_out_form', 'tab_right', 'add_variable', 'var_out_form_1', 'New Variable');">
+            Create Variable
+    </button>
+</form>

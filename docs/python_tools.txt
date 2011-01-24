@@ -1,0 +1,57 @@
+How to add/edit Python tools
+
+See also: 
+    "Data Formats"
+
+Notes on paths: 
+- Files: EDSA is installed by default in /usr/share/edsa, although you can certainly put it somewhere else.  Whenever we refer to a filesystem path, we mean the path relative to your EDSA installation unless otherwise noted.  So, if we say to edit templates/foo.html, we mean /usr/share/edsa/templates/foo.html.  If you have installed the EDSA client to a different directory, substitute it accordingly.
+- URLs: If you are running the EDSA client on your computer using './manage.py runserver' and have not specified an IP address or port, the Web interface will be available at http://127.0.0.1:8000.  URLs specified in this documentation are relative to this address.  So, for example, if we say 'go to /foo/bar.html', what we really mean is http://127.0.0.1:8000/foo/bar.html.  If your Web interface is set up on a different address (or hostname) and/or port, substitute them accordingly.
+
+Notes on communication:
+- IP addresses: EDSA depends on being able to access code and data across a network.  Future releases of EDSA will include VPN software to simplify this, but for now you'll have to ensure that the IP addresses associated with each machine can be seen by all other machines.  This means machines cannot be used across firewall or router boundaries.  If you are using a virtual machine, make sure to configure its network adapter for a unique IP address (e.g. bridged adapter) rather than using NAT.
+
+
+0.  Set up the machine if you haven't already.
+
+EDSA currently supports Ubuntu Linux out of the box and can be set up on other operating systems (e.g. Windows) with minimal effort.  Download the EDSA binary installer from the Internet and run it as root.  The installer program will prompt you for some information, such as the installation directory and your machine name.  Once it is done, follow the stated directions to run the EDSA daemon and client processes.
+
+Have an EDSA administrator add your machine, user name and IP address to the database.  This will be possible to do using the client in the future.
+
+
+1.  Write or adapt the code for your tool.
+
+Create a Python file in your EDSA installation's tools area.  This is in tools/ by default (it's controlled by EDSA_TOOL_WORKDIR in edsa/local_settings.py).
+
+Tool should be encapsulated as a class with at least a run() method like this:
+    def run(self, input_vars, **kwargs):
+
+The input_vars argument is a dictionary mapping the names of the input variables (e.g. 'v', 'omega_x') to their values.  The return value of this function should likewise be a dictionary mapping the names of the output variables to their values.  The values may be any type, as long as it can be pickled (see our documentation on data formats).  Due to the large number of possible data types, EDSA does not enforce type checking!  Your tool should perform validation of the input data and raise an exception if a problem is encountered.  The exception name and string will be handed back to the user.
+
+Your tool class's run() method should accept any number of optional keyword arguments (**kwargs).  You can check for and use any optional arguments that you want to.  The default set of optional arguments is set in the Tool's "default parameters" field and can be overridden at runtime.
+
+See the accompanying file, tool_example.py, for an example of a basic tool that multiplies the input variables 'x' and 'y' to create 'z'.  We may add more intricate tool examples in the future.
+    
+
+2.  Tell EDSA about your tool.
+
+Logically, tools are set up in three major steps:
+1. First, you need to register your class as a Python module within the EDSA system.  This allows functions within the EDSA system to load and execute your code.
+2. Second, you need to register your tool's metadata and associate it with machines.  You may also document who maintains the tool and how to use it.
+3. Third, you need to designate the input and output variables that will be used by the tool. 
+
+Go to the home page (typically http://localhost:8000/) and click "Manage Tools."  Choose the "Create a new tool" tab on the top pane of this page.  Enter the name and version for your new tool, and click "Start."  The left pane immediately below this form will prompt you to select a tool type.  Choose "Python tool" (command-line tools will be described later).  This should open up more options.
+
+To address step 1, click the 'Create Module' button at the bottom of the tab.  This should open a new tab prompting you to provide more information.  Fill out the form as follows:
+- Module: This is the Python module your tool resides in.  Usually it is the relative path from your EDSA tools directory (e.g. /usr/share/edsa/tools) to the tool with the filesystem delimeters (e.g. '/') replaced by periods.  If you have placed your tool code directly in the EDSA tools directory, write in the name of your code file without the .py extension.
+- Class name: This is the name of your tool implementation class.
+- Documentation: An explanation of what the tool does and what assumptions (if any) it places on the input variables.
+- Default parameters: A JSON-formatted dictionary of parameters to be provided to the tool's run() function as keyword arguments.  If you don't know what this means, don't worry about it; leave it as "{}", which has no effect.
+Then click "Save."  Your new module will be registered and the tool configuration form will be updated to reflect the change.
+
+To address step 2, select your machine from the list of "Machines."  Then click "Create."  You should see the center and right panes populated with forms for configuring the tool's input and output variables.
+
+To address step 3, select variables to link as inputs and outputs in the center and right panes.  Each variable represents a different quantity, and multiple variables can be created with the same units.  For example, wingspan is a different variable from chord length even though they are both measured in units of length (meters).  If you need to create a new variable. click the "Create Variable" button in the appropriate pane.
+
+At this stage you are ready to proceed:
+- The tool may optionally be integrated into a "workflow" by wrapping it into a task and linking the task into a dependency tree.  (See "Workflows")
+- The tool may be executed with its input variables bound to specific values. (See "Running Tools")

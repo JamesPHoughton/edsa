@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Edit Workflows
+{% endblock %}   
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="/media/styles/create.css" />
+{% endblock %}  
+
+{% block javascript %}
+    {{ block.super }}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}    
+    
+{% block content %}
+    <div id="Header" dojoType="dojox.layout.ContentPane" style="height: 120px; padding: 5px;">
+        <div id='tab_header' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+            <div id='pane_create_task' dojoType="dojox.layout.ContentPane" title="Start new workflow">
+                <form method="POST" action="/workflow/" id="create_task_form">
+                <p>{{ start_form.as_p }}</p>
+                <button id='submit_create_form' dojoType="dijit.form.Button" type="button" disabled="true" onClick="update_form('{{ request.path }}', 'create_task_form', 'pane_left', 'init_task');">
+                    Start Individual Task
+                </button>
+                <button id='submit_stimulus_form' dojoType="dijit.form.Button" type="button" disabled="true" onClick="update_form('{{ request.path }}', 'create_task_form', 'pane_left', 'init_stimulus_task');">
+                    Start Stimulus Task
+                </button>
+                </form>
+            </div>
+            <div id='pane_edit_task' dojoType="dojox.layout.ContentPane" title="Edit existing workflow">
+            {% include "ajax_fragments/workflow_select_task.html" %}
+            </div>
+        </div>
+    </div>
+    
+        <div id="leftcol" dojoType="dojox.layout.ContentPane" style="height: 400px; padding: 5px;">
+            <div id='tab_left' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+                <div id='pane_left' dojoType="dojox.layout.ContentPane" title="Configure Workflow">
+                Select or initialize a workflow above to proceed.
+                </div>
+            </div>
+        </div>
+    
+    <div id="main">
+        <div id="rightcol" dojoType="dojox.layout.ContentPane" style="width: 33%; height: 400px; padding: 5px;">
+            <div id='tab_right' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+                <div id='pane_right' dojoType="dojox.layout.ContentPane" title="Unused Tab">
+
+                </div>
+            </div>
+        </div>
+        
+    <div id="centercol" dojoType="dojox.layout.ContentPane" style="height: 400px; padding: 5px;">
+        <div id='tab_center' dojoType="dijit.layout.TabContainer" style="width: 100%; height: 100%;">
+            <div id='pane_center' dojoType="dojox.layout.ContentPane" title="Unused Tab">
+
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+{% endblock %}
